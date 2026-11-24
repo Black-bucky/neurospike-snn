@@ -1,0 +1,71 @@
+# NeuroSpike Default Configuration
+# ================================
+
+project:
+  name: "neurospike"
+  seed: 42
+  device: "auto"  # auto, cuda, cpu
+
+# Model Configuration
+model:
+  architecture: "spiking_cnn"  # spiking_cnn, spiking_resnet, spiking_transformer
+  num_steps: 100
+  beta: 0.9  # Membrane potential decay rate
+
+  # SpikingCNN specific
+  spiking_cnn:
+    in_channels: 2
+    num_classes: 10
+
+  # SpikingResNet specific
+  spiking_resnet:
+    in_channels: 2
+    num_classes: 10
+    block_config: [2, 2, 2, 2]
+
+  # SpikingTransformer specific
+  spiking_transformer:
+    input_dim: 700
+    num_classes: 20
+    d_model: 256
+    num_heads: 4
+    num_layers: 4
+
+# Dataset Configuration
+dataset:
+  name: "shd"  # shd, dvs_cifar10
+  root_dir: "./data"
+  num_workers: 4
+  pin_memory: true
+
+# Training Configuration
+training:
+  num_epochs: 100
+  batch_size: 128
+  optimizer:
+    name: "adamw"
+    lr: 0.001
+    weight_decay: 0.01
+    betas: [0.9, 0.999]
+  scheduler:
+    name: "cosine"
+    T_max: 100
+    eta_min: 0.00001
+  early_stopping:
+    patience: 15
+    min_delta: 0.001
+  mixed_precision: true
+
+# Logging
+logging:
+  save_dir: "./checkpoints"
+  log_dir: "./logs"
+  save_every: 10
+  use_wandb: false
+  wandb_project: "neurospike"
+
+# Visualization
+visualization:
+  save_plots: true
+  plot_dir: "./results/plots"
+  plot_every: 5  # Plot every N epochs
